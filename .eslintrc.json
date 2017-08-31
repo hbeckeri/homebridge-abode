@@ -171,7 +171,6 @@
 		"space-unary-ops": 2,
 		"spaced-comment": [2, "always"],
 		"wrap-regex": 0,
-		"no-var": 2,
 		"generator-star-spacing": 2,
 		"max-depth": 0,
 		"max-len": 0,

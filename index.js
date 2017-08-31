@@ -1,8 +1,7 @@
 'use strict';
 
-let Service;
-let Characteristic;
-
+var Service;
+var Characteristic;
 
 function AbodeCommandAccessory(log, config) {
 	this.log = log;
