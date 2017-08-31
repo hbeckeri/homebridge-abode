@@ -32,7 +32,7 @@ AbodeCommandAccessory.prototype.getServices = function () {
 	this.alarmService = new Service.LockMechanism(this.name);
 
 	this.informationService
-	.setCharacteristic(Characteristic.Manufacturer, 'Garage Command')
+	.setCharacteristic(Characteristic.Manufacturer, 'Abode Command')
 	.setCharacteristic(Characteristic.Model, 'Homebridge Plugin')
 	.setCharacteristic(Characteristic.SerialNumber, '001');
 
