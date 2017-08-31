@@ -1,0 +1,29 @@
+{
+  "name": "homebridge-abode",
+  "version": "1.0.0",
+  "description": "Abode Plugin for homebridge",
+  "main": "./lib",
+  "scripts": {
+    "lint": "scripts/lint.sh"
+  },
+  "author": {
+    "name": "Harrison Beckerich",
+    "email": "hbeckerich@torchlite.com"
+  },
+  "license": "MIT",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/MIT"
+    }
+  ],
+  "repository": "https://github.com/hbeckeri/homebridge-abode.git",
+  "dependencies": {
+    "abode-api": "1.0.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "7.2.3",
+    "dotenv": "4.0.0",
+    "eslint": "3.19.0"
+  }
+}
