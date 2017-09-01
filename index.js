@@ -50,7 +50,7 @@ var Characteristic;
 module.exports = function (homebridge) {
 	Service = homebridge.hap.Service;
 	Characteristic = homebridge.hap.Characteristic;
-	homebridge.registerAccessory("homebridge-fakebulb", "FakeBulb", FakeBulbAccessory);
+	homebridge.registerAccessory("homebridge-abode", "Abode", FakeBulbAccessory);
 };
 
 function FakeBulbAccessory(log, config) {
