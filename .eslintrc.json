@@ -119,7 +119,6 @@
 		"no-undef": 2,
 		"no-undef-init": 2,
 		"no-undefined": 0,
-		"no-use-before-define": 2,
 		"handle-callback-err": 0,
 		"no-mixed-requires": 0,
 		"no-new-require": 0,
