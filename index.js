@@ -11,19 +11,19 @@ function FakeBulbAccessory(log, config) {
   this.name = config["name"];
   this.bulbName = config["bulb_name"] || this.name; // fallback to "name" if you didn't specify an exact "bulb_name"
   this.binaryState = 0; // bulb state, default is OFF
-  this.log("Starting a fake bulb device with name '" + this.bulbName + "'...");
+  this.log("WUBA: Starting a fake bulb device with name '" + this.bulbName + "'...");
 //  this.search();
 }
 
 FakeBulbAccessory.prototype.getPowerOn = function(callback) {
   var powerOn = this.binaryState > 0;
-  this.log("Power state for the '%s' is %s", this.bulbName, this.binaryState);
+  this.log("PWUBA: ower state for the '%s' is %s", this.bulbName, this.binaryState);
   callback(null, powerOn);
 }
 
 FakeBulbAccessory.prototype.setPowerOn = function(powerOn, callback) {
   this.binaryState = powerOn ? 1 : 0; // wemo langauge
-  this.log("Set power state on the '%s' to %s", this.bulbName, this.binaryState);
+  this.log("SWUBA: et power state on the '%s' to %s", this.bulbName, this.binaryState);
   callback(null);
 }
 
