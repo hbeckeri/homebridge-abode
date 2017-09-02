@@ -21,9 +21,9 @@ FakeBulbAccessory.prototype.getPowerOn = function (callback) {
     this.abode.panel()
         .then(response => {
             if (response.data.mode.area_1) {
-                let standbyOff = response.data.area_1 !== 'standby';
+                let standbyOff = response.data.mode.area_1 !== 'standby';
 
-                this.log('Alarm Status: ' + response.data.area_1);
+                this.log('Alarm Status: ' + response.data.mode.area_1);
 
                 return callback(null, standbyOff);
             }
@@ -41,7 +41,7 @@ FakeBulbAccessory.prototype.setPowerOn = function (powerOn, callback) {
         operation = this.abode.mode.away();
     } else {
         this.log('Setting alarm to standby');
-        operation = this.mode.standby();
+        operation = this.abode.mode.standby();
     }
 
     return operation
