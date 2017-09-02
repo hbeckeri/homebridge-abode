@@ -8,7 +8,7 @@ module.exports = function (homebridge) {
 };
 
 function FakeBulbAccessory(log, config) {
-    this.abode = require('abode-api').abode(this.config.abodeUsername, this.config.abodePassword);
+    this.abode = require('abode-api').abode(config.abodeUsername, config.abodePassword);
     this.log = log;
     this.name = config.name;
     this.bulbName = config.bulb_name || this.name; // fallback to "name" if you didn't specify an exact "bulb_name"
