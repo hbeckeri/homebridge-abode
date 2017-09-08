@@ -51,7 +51,6 @@ AbodeAlarmAccessory.prototype.setAlarmStatus = function (shouldArm, callback) {
     return operation
         .then(() => {
             this.log(`${this.name}: Set status to ${status}`);
-            this.lockService.setCharacteristic(Characteristic.LockCurrentState, status);
             return callback(null);
          })
         .catch(err => {
@@ -72,7 +71,7 @@ AbodeAlarmAccessory.prototype.getServices = function () {
 
     this.lockService
         .getCharacteristic(Characteristic.LockCurrentState)
-        .on('get', this.setAlarmStatus.bind(this));
+        .on('get', this.getAlarmStatus.bind(this));
 
     return [this.lockService];
 };
