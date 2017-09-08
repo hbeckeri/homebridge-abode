@@ -65,13 +65,9 @@ AbodeAlarmAccessory.prototype.getServices = function () {
     this.lockService = new Service.LockMechanism(this.name);
 
     this.lockService
-        .getCharacteristic(Characteristic.LockTargetState)
+        .getCharacteristic(Characteristic.LockCurrentState)
         .on('get', this.getAlarmStatus.bind(this))
         .on('set', this.setAlarmStatus.bind(this));
-
-    this.lockService
-        .getCharacteristic(Characteristic.LockCurrentState)
-        .on('get', this.getAlarmStatus.bind(this));
 
     return [this.lockService];
 };
