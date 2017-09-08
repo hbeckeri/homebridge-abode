@@ -14,17 +14,24 @@ function AbodeAlarmAccessory(log, config) {
 }
 
 AbodeAlarmAccessory.prototype.getAlarmStatus = function (callback) {
+    this.log(`${this.name}: Getting Alarm Status`);
+
     this.abode.panel()
         .then(response => {
             if (response.data.mode.area_1) {
                 let armed = response.data.mode.area_1 !== 'standby';
+
+                this.log(`${this.name}: Status is ${armed ? 'SECURED' : 'UNSECURED'}`);
 
                 return callback(null, armed);
             }
 
             return callback(null);
         })
-        .catch(() => callback(null));
+        .catch(err => {
+            this.log(`${this.name}: ERROR GETTING STATUS ${err}`);
+            return callback(null);
+        });
 };
 
 AbodeAlarmAccessory.prototype.setAlarmStatus = function (shouldArm, callback) {
@@ -39,23 +46,31 @@ AbodeAlarmAccessory.prototype.setAlarmStatus = function (shouldArm, callback) {
         status = Characteristic.LockCurrentState.UNSECURED;
     }
 
+    this.log(`${this.name}: Setting status status to ${status}`);
+
     return operation
         .then(() => {
+            this.log(`${this.name}: Set status to ${status}`);
             this.lockService.setCharacteristic(Characteristic.LockCurrentState, status);
             return callback(null);
          })
-        .catch(() => callback(null));
+        .catch(err => {
+            this.log(`${this.name}: ERROR SETTING STATUS ${err}`);
+            return callback(null);
+        });
 };
 
 AbodeAlarmAccessory.prototype.getServices = function () {
-   this.lockService = new Service.LockMechanism(this.name);
+    this.log(`${this.name}: Getting Services`);
 
-   this.lockService
+    this.lockService = new Service.LockMechanism(this.name);
+
+    this.lockService
         .getCharacteristic(Characteristic.LockTargetState)
         .on('get', this.getAlarmStatus.bind(this))
         .on('set', this.setAlarmStatus.bind(this));
 
-   this.lockService
+    this.lockService
         .getCharacteristic(Characteristic.LockCurrentState)
         .on('get', this.setAlarmStatus.bind(this));
 
