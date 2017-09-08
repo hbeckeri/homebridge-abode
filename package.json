@@ -1,6 +1,6 @@
 {
   "name": "homebridge-abode",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Abode Plugin for homebridge",
   "scripts": {
     "lint": "scripts/lint.sh"
