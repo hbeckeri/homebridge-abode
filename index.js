@@ -4,28 +4,22 @@ var Characteristic;
 module.exports = function (homebridge) {
     Service = homebridge.hap.Service;
     Characteristic = homebridge.hap.Characteristic;
-    homebridge.registerAccessory("homebridge-abode", "Abode", FakeBulbAccessory);
+    homebridge.registerAccessory("homebridge-abode", "Abode", AbodeAlarmAccessory);
 };
 
-function FakeBulbAccessory(log, config) {
+function AbodeAlarmAccessory(log, config) {
     this.abode = require('abode-api').abode(config.abodeUsername, config.abodePassword);
     this.log = log;
     this.name = config.name;
-    this.bulbName = config.bulb_name || this.name; // fallback to "name" if you didn't specify an exact "bulb_name"
-    this.binaryState = 0; // bulb state, default is OFF
-    this.log("WUBA: Starting a fake bulb device with name '" + this.bulbName + "'...");
-    //  this.search();
 }
 
-FakeBulbAccessory.prototype.getPowerOn = function (callback) {
+AbodeAlarmAccessory.prototype.getAlarmStatus = function (callback) {
     this.abode.panel()
         .then(response => {
             if (response.data.mode.area_1) {
-                let standbyOff = response.data.mode.area_1 !== 'standby';
+                let armed = response.data.mode.area_1 !== 'standby';
 
-                this.log('Alarm Status: ' + response.data.mode.area_1);
-
-                return callback(null, standbyOff);
+                return callback(null, armed);
             }
 
             return callback(null);
@@ -33,29 +27,37 @@ FakeBulbAccessory.prototype.getPowerOn = function (callback) {
         .catch(() => callback(null));
 };
 
-FakeBulbAccessory.prototype.setPowerOn = function (powerOn, callback) {
+AbodeAlarmAccessory.prototype.setAlarmStatus = function (shouldArm, callback) {
     let operation;
+    let status;
 
-    if (powerOn) {
-        this.log('Setting alarm to away');
+    if (shouldArm) {
         operation = this.abode.mode.away();
+        status = Characteristic.LockCurrentState.SECURED;
     } else {
-        this.log('Setting alarm to standby');
         operation = this.abode.mode.standby();
+        status = Characteristic.LockCurrentState.UNSECURED;
     }
 
     return operation
-        .then(() => callback(null))
+        .then(() => {
+            this.lockService.setCharacteristic(Characteristic.LockCurrentState, status);
+            return callback(null);
+         })
         .catch(() => callback(null));
 };
 
-FakeBulbAccessory.prototype.getServices = function () {
-    var lightbulbService = new Service.Lightbulb(this.name);
+AbodeAlarmAccessory.prototype.getServices = function () {
+    let lockService = new Service.LockMechanism(this.name);
 
-    lightbulbService
-        .getCharacteristic(Characteristic.On)
-        .on('get', this.getPowerOn.bind(this))
-        .on('set', this.setPowerOn.bind(this));
+   lockService
+        .getCharacteristic(Characteristic.LockTargetState)
+        .on('get', this.getAlarmStatus.bind(this))
+        .on('set', this.setAlarmStatus.bind(this));
 
-    return [lightbulbService];
+   lockService
+        .getCharacteristic(Characteristic.LockCurrentState)
+        .on('get', this.setAlarmStatus.bind(this));
+
+    return [lockService];
 };
