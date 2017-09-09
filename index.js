@@ -11,6 +11,17 @@ function AbodeAlarmAccessory(log, config) {
     this.abode = require('abode-api').abode(config.abodeUsername, config.abodePassword);
     this.log = log;
     this.name = config.name;
+
+    this.lockService = new Service.LockMechanism(this.name);
+
+    this.lockService
+        .getCharacteristic(Characteristic.LockTargetState)
+        .on('get', this.getAlarmStatus.bind(this))
+        .on('set', this.setAlarmStatus.bind(this));
+
+    this.lockService
+        .getCharacteristic(Characteristic.LockCurrentState)
+        .on('get', this.getAlarmStatus.bind(this));
 }
 
 AbodeAlarmAccessory.prototype.getAlarmStatus = function (callback) {
@@ -50,6 +61,7 @@ AbodeAlarmAccessory.prototype.setAlarmStatus = function (shouldArm, callback) {
 
     return operation
         .then(() => {
+            this.lockservice.setCharacteristic(Characteristic.LockCurrentState, status);
             this.log(`${this.name}: Set status to ${status}`);
             return callback(null);
          })
@@ -61,13 +73,5 @@ AbodeAlarmAccessory.prototype.setAlarmStatus = function (shouldArm, callback) {
 
 AbodeAlarmAccessory.prototype.getServices = function () {
     this.log(`${this.name}: Getting Services`);
-
-    this.lockService = new Service.LockMechanism(this.name);
-
-    this.lockService
-        .getCharacteristic(Characteristic.LockCurrentState)
-        .on('get', this.getAlarmStatus.bind(this))
-        .on('set', this.setAlarmStatus.bind(this));
-
     return [this.lockService];
 };
