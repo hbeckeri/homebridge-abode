@@ -30,11 +30,11 @@ AbodeAlarmAccessory.prototype.getAlarmStatus = function (callback) {
     this.abode.panel()
         .then(response => {
             if (response.data.mode.area_1) {
-                let armed = response.data.mode.area_1 !== 'standby';
+                let status = response.data.mode.area_1 !== 'standby' ? Characteristic.LockCurrentState.SECURED : Characteristic.LockCurrentState.UNSECURED;
 
-                this.log(`${this.name}: Status is ${armed ? 'SECURED' : 'UNSECURED'}`);
+                this.log(`${this.name}: Status is ${status ? 'SECURED' : 'UNSECURED'}`);
 
-                return callback(null, armed);
+                return callback(null, status);
             }
 
             return callback(null);
