@@ -8,7 +8,7 @@ module.exports = function (homebridge) {
 };
 
 function AbodeAlarmAccessory(log, config) {
-    this.abode = require('abode-api').abode(config.abodeUsername, config.abodePassword);
+    this.abode = require('abode-api').abode(config.abode.username, config.abode.password);
     this.log = log;
     this.name = config.name;
 
@@ -34,6 +34,7 @@ AbodeAlarmAccessory.prototype.getAlarmStatus = function (callback) {
 
                 this.log(`${this.name}: Status is ${status ? 'SECURED' : 'UNSECURED'}`);
 
+                this.lockService.setCharacteristic(Characteristic.LockCurrentState, status);
                 return callback(null, status);
             }
 
