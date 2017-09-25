@@ -35,10 +35,13 @@ AbodeAlarmAccessory.prototype.getAlarmStatus = function (callback) {
 				switch (response.data.mode.area_1) {
 					case 'standby':
 						status = Characteristic.SecuritySystemCurrentState.DISARMED;
+						break;
 					case 'home':
 						status = Characteristic.SecuritySystemCurrentState.HOME_ARM;
+						break;
 					case 'away':
 						status = Characteristic.SecuritySystemCurrentState.AWAY_ARM;
+						break;
 				}
 
 				this.log(`${this.name}: Status is ${status}`);
