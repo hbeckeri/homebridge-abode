@@ -35,10 +35,13 @@ AbodeAlarmAccessory.prototype.getAlarmStatus = function (callback) {
 				switch (response.data.mode.area_1) {
 					case 'standby':
 						status = Characteristic.SecuritySystemCurrentState.DISARMED;
+						break;
 					case 'home':
 						status = Characteristic.SecuritySystemCurrentState.HOME_ARM;
+						break;
 					case 'away':
 						status = Characteristic.SecuritySystemCurrentState.AWAY_ARM;
+						break;
 				}
 
 				this.log(`${this.name}: Status is ${status}`);
@@ -57,19 +60,23 @@ AbodeAlarmAccessory.prototype.getAlarmStatus = function (callback) {
 
 AbodeAlarmAccessory.prototype.setAlarmStatus = function (state, callback) {
 	let operation;
-	let status;
+	let status = '';
 
 	switch (state) {
 		case Characteristic.SecuritySystemTargetState.STAY_ARM:
+			status = 'home';
 			operation = this.abode.mode.home();
 			break;
 		case Characteristic.SecuritySystemTargetState.AWAY_ARM :
+			status = 'away';
 			operation = this.abode.mode.away();
 			break;
 		case Characteristic.SecuritySystemTargetState.NIGHT_ARM:
+			status = 'home';
 			operation = this.abode.mode.home();
 			break;
 		case Characteristic.SecuritySystemTargetState.DISARM:
+			status = 'standby';
 			operation = this.abode.mode.standby();
 			break;
 	}
@@ -78,7 +85,7 @@ AbodeAlarmAccessory.prototype.setAlarmStatus = function (state, callback) {
 
 	return operation
 		.then(() => {
-			this.lockservice.setCharacteristic(Characteristic.SecuritySystemCurrentState, state);
+			this.lockService.setCharacteristic(Characteristic.SecuritySystemCurrentState, state);
 			this.log(`${this.name}: Set status to ${status}`);
 			return callback(null);
 		})
