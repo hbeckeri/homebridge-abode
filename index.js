@@ -81,7 +81,7 @@ AbodeAlarmAccessory.prototype.setAlarmStatus = function (state, callback) {
 
 	return operation
 		.then(() => {
-			this.lockservice.setCharacteristic(Characteristic.SecuritySystemCurrentState, state);
+			this.lockService.setCharacteristic(Characteristic.SecuritySystemCurrentState, state);
 			this.log(`${this.name}: Set status to ${status}`);
 			return callback(null);
 		})
