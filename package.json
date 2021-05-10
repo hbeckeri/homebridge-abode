@@ -25,7 +25,7 @@
   ],
   "repository": "https://github.com/hbeckeri/homebridge-abode.git",
   "dependencies": {
-    "abode-api": "hansenzhang/abode-api#patch-1"
+    "abode-api": "git+https://github.com/hansenzhang/abode-api.git#patch-1"
   },
   "devDependencies": {
     "babel-eslint": "7.2.3",
