@@ -4,7 +4,7 @@
 ## Installation
 
 ```
-npm i -g homebridge-abode
+sudo npm install -g xrvk/homebridge-abode
 ```
 
 ## Configuration

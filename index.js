@@ -58,8 +58,9 @@ AbodeAlarmAccessory.prototype.getAlarmStatus = function (callback) {
 		});
 };
 
-function changeStatus(state) {
+AbodeAlarmAccessory.prototype.setAlarmStatus = function (state, callback) {
 	let operation;
+	let status;
 
 	switch (state) {
 		case Characteristic.SecuritySystemTargetState.STAY_ARM:
@@ -76,23 +77,15 @@ function changeStatus(state) {
 			break;
 	}
 
-	return operation;
-}
-
-AbodeAlarmAccessory.prototype.setAlarmStatus = function (state, callback) {
 	this.log(`${this.name}: Setting status status to ${state}`);
 
-	return changeStatus(state)
+	return operation
 		.then(() => {
-			this.lockservice.setCharacteristic(Characteristic.SecuritySystemCurrentState, state);
-			this.log(`${this.name}: Set status to ${state}`);
+			this.lockService.setCharacteristic(Characteristic.SecuritySystemCurrentState, state);
+			this.log(`${this.name}: Set status to ${status}`);
 			return callback(null);
 		})
 		.catch(err => {
-			if (err.response.status === 615) { // Force Status
-				return changeStatus(state);
-			}
-
 			this.log(`${this.name}: ERROR SETTING STATUS ${err}`);
 			return callback(null);
 		});
